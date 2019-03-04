@@ -32,7 +32,7 @@ class GeneratingActivity(var game: BrGame) : Activity {
         game.render()
     }
 
-    override fun keyPressed(keycode: KeyStroke): Boolean {
+    override fun keyPressed(keyStroke: KeyStroke): Boolean {
         return false
     }
 

@@ -42,6 +42,7 @@ class PlayActivity(val game: BrGame, val world: World) :
                         heuristic = { one, two -> getEuclideanDistance(one, two).toDouble() },
                         neighbors = {
                             it.vonNeumanNeighborhood().filter { vec ->
+                                !world.map[it].type.blocks &&
                                 world.map[it].entities.filter { it != character }.isEmpty()
                             }
                         },
@@ -71,6 +72,7 @@ class PlayActivity(val game: BrGame, val world: World) :
                     heuristic = { one, two -> getChebyshevDistance(one, two).toDouble() },
                     neighbors = {
                         it.vonNeumanNeighborhood().filter { vec ->
+                            !world.map[it].type.blocks &&
                             world.map[it].entities.filter { it != character }.isEmpty()
                         }
                     },

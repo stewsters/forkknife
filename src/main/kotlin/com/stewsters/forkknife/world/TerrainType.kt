@@ -14,7 +14,13 @@ enum class TerrainType(val blocks: Boolean, val fore: ANSITileColor, val back: A
         ANSITileColor.WHITE,
         ANSITileColor.BLACK,
         'X'
-    );
+    ),
+    DOOR(
+        false,
+        ANSITileColor.CYAN,
+        ANSITileColor.BLACK,
+        '/'
+    )
 
 
 }

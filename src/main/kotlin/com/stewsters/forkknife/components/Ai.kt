@@ -58,7 +58,7 @@ class PlayerAI : AI {
                 }
 
                 //if target exists, is alive, is in range, and have a clear LOS
-                if (target.creature?.hp.current <= 0) {
+                if (target.creature.hp.current <= 0) {
                     println("Shooting a dead horse")
                     return
                 }

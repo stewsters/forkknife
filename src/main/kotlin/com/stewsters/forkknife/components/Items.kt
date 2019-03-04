@@ -16,6 +16,8 @@ class Magazine(quality: Quality) : Item(quality) // increase rounds held
 
 class Barrel(quality: Quality) : Item(quality) // increase ranged accuracy
 
+class AmmoBox(val ammoType: AmmoType, var quantity: Int) : Item(Quality.WHITE)
+
 enum class AmmoType {
     LIGHT, // pistol
     HEAVY, // rifle
@@ -29,7 +31,7 @@ class Gun(
     var magazine: Magazine? = null,
     var barrel: Barrel? = null,
     var stock: Stock? = null
-)
+) : Item(Quality.WHITE)
 
 enum class GunType(val ammoType: AmmoType) {
     // pistol

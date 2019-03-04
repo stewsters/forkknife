@@ -12,12 +12,8 @@ class MenuActivity(val game: BrGame) : Activity {
     val screen: Screen
 
     init {
-
-
         screen = Screens.createScreenFor(game.terminal)
 
-        // this will be 1x1 left and down from the top left
-        // corner of the panel
         val header = Components.header()
             .withPosition(Position.create(20, 15))
             .withText("Battle Royale")
@@ -33,12 +29,12 @@ class MenuActivity(val game: BrGame) : Activity {
             .withPosition(Position.create(0, 2).relativeToBottomOf(play))
             .build()
 
-        play.onMousePressed { mouseAction ->
+        play.onMousePressed {
             game.activity = GeneratingActivity(game)
             game.render()
         }
 
-        exit.onMousePressed { mouseAction ->
+        exit.onMousePressed {
             println("Bye")
             System.exit(0)
         }
@@ -49,7 +45,7 @@ class MenuActivity(val game: BrGame) : Activity {
     }
 
 
-    override fun keyPressed(keycode: KeyStroke): Boolean {
+    override fun keyPressed(keyStroke: KeyStroke): Boolean {
         return false
     }
 
