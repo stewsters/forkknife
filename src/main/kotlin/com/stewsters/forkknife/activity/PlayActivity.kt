@@ -1,24 +1,22 @@
 package com.stewsters.forkknife.activity
 
-import com.stewsters.forkknife.*
-import com.stewsters.forkknife.components.PlayerAI
+import com.stewsters.forkknife.BrGame
+import com.stewsters.forkknife.highlightPath
+import com.stewsters.forkknife.system.HudRenderSystem
+import com.stewsters.forkknife.system.MapRenderSystem
 import com.stewsters.forkknife.world.World
+import com.stewsters.forkknife.worldSize
 import kaiju.math.Vec2
 import kaiju.math.getChebyshevDistance
 import kaiju.math.getEuclideanDistance
 import kaiju.pathfinder.findPath2d
-import org.hexworks.zircon.api.Positions
 import org.hexworks.zircon.api.Screens
-import org.hexworks.zircon.api.Tiles
-import org.hexworks.zircon.api.color.ANSITileColor
-import org.hexworks.zircon.api.color.TileColor
 import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.input.KeyStroke
 import org.hexworks.zircon.api.input.MouseAction
 import org.hexworks.zircon.api.input.MouseActionType
 
-class PlayActivity(val game: BrGame, val world: World) :
-    Activity {
+class PlayActivity(val game: BrGame, val world: World) : Activity {
     var target: Position? = null
 
     val screen = Screens.createScreenFor(game.terminal)
@@ -31,7 +29,7 @@ class PlayActivity(val game: BrGame, val world: World) :
         return when (mouseAction.actionType) {
             MouseActionType.MOUSE_PRESSED -> {
 
-                val character = characters[selectedChar]
+                val character = world.characters[world.selectedChar]
                 val pos = world.screenToMap(mouseAction.position)
 
                 if (character.ai != null) {
@@ -43,7 +41,7 @@ class PlayActivity(val game: BrGame, val world: World) :
                         neighbors = {
                             it.vonNeumanNeighborhood().filter { vec ->
                                 !world.map[it].type.blocks &&
-                                world.map[it].entities.filter { it != character }.isEmpty()
+                                        world.map[it].entities.filter { it != character }.isEmpty()
                             }
                         },
                         start = character.pos!!,
@@ -63,7 +61,7 @@ class PlayActivity(val game: BrGame, val world: World) :
                 }
                 target = mouseAction.position
 
-                val character = characters[selectedChar]
+                val character = world.characters[world.selectedChar]
                 val pos = world.screenToMap(mouseAction.position)
 
                 val path = findPath2d(
@@ -73,7 +71,7 @@ class PlayActivity(val game: BrGame, val world: World) :
                     neighbors = {
                         it.vonNeumanNeighborhood().filter { vec ->
                             !world.map[it].type.blocks &&
-                            world.map[it].entities.filter { it != character }.isEmpty()
+                                    world.map[it].entities.filter { it != character }.isEmpty()
                         }
                     },
                     start = character.pos!!,
@@ -93,9 +91,9 @@ class PlayActivity(val game: BrGame, val world: World) :
 
     override fun keyPressed(keyStroke: KeyStroke): Boolean {
         when (keyStroke.getCharacter()) {
-            '1' -> selectedChar = 0
-            '2' -> selectedChar = 1
-            '3' -> selectedChar = 2
+            '1' -> world.selectedChar = 0
+            '2' -> world.selectedChar = 1
+            '3' -> world.selectedChar = 2
             ' ' -> world.passTime(world)
         }
 
@@ -105,58 +103,9 @@ class PlayActivity(val game: BrGame, val world: World) :
 
     override fun render() {
 
-        for (x in 0 until screenSize.x) {
-            for (y in 0 until screenSize.y) {
-                // TODO: if lit
-
-                val worldPos = world.screenToMap(x, y)
-
-                var fore: TileColor
-                var back: TileColor
-                var char: Char
-
-                if (!world.map.contains(worldPos)) {
-                    fore = ANSITileColor.BLACK
-                    back = ANSITileColor.BLACK
-                    char = ' '
-
-                } else {
-
-                    val cell = world.map[worldPos]
-                    val entity = cell.entities.firstOrNull()
-
-                    if (entity?.appearance != null) {
-                        fore = entity.appearance.color
-                        back = entity.appearance.back ?: cell.type.back
-                        char = entity.appearance.ch
-
-                    } else {
-                        fore = cell.type.fore
-                        back = cell.type.back
-                        char = cell.type.ch
-                    }
-                }
-
-                if (highlightPath.contains(worldPos)) {
-                    back = ANSITileColor.GREEN
-                } else {
-                    val playerAI = characters[selectedChar].ai as PlayerAI
-                    if (playerAI.highlight(worldPos)) {
-                        back = ANSITileColor.YELLOW
-                    }
-                }
-
-
-                game.terminal.setTileAt(
-                    Positions.create(x, y),
-                    Tiles.newBuilder()
-                        .withBackgroundColor(back)
-                        .withForegroundColor(fore)
-                        .withCharacter(char)
-                        .build()
-                )
-            }
-        }
+        MapRenderSystem.process(world, screen)
+        HudRenderSystem.process(world, screen)
+        screen.display()
     }
 
 }

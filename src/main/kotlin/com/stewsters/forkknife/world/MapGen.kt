@@ -20,7 +20,7 @@ object MapGen {
                 Cell(type, mutableListOf())
             },
             {
-                characters[selectedChar].pos ?: worldCenter
+                it.characters[it.selectedChar].pos ?: worldCenter
             }
         )
 
@@ -114,7 +114,7 @@ object MapGen {
                 )
                 world.add(opponent)
                 if (squad.id == 0)
-                    characters.add(opponent)
+                    world.characters.add(opponent)
             }
         }
 

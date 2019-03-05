@@ -14,6 +14,8 @@ class Creature(
     var backpack: Backpack? = null
 
 ) {
+    var shooting: Boolean = false
+
     fun getInventorySize(): Int {
         return 6 + (backpack?.quality?.value ?: 0)
     }

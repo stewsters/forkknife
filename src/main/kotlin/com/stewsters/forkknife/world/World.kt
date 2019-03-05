@@ -1,7 +1,8 @@
 package com.stewsters.forkknife.world
 
 import com.stewsters.forkknife.components.Entity
-import com.stewsters.forkknife.halfScreenSize
+import com.stewsters.forkknife.halfPlayAreaSize
+import com.stewsters.forkknife.leftColumn
 import com.stewsters.forkknife.worldCenter
 import kaiju.math.Matrix2d
 import kaiju.math.Vec2
@@ -14,6 +15,9 @@ class World(
     val map: Matrix2d<Cell>,
     var cameraCenter: (world: World) -> Vec2
 ) {
+
+    val characters: MutableList<Entity> = mutableListOf()
+    var selectedChar = 0
 
     val actors = mutableListOf<Entity>() // with ai
 
@@ -65,8 +69,8 @@ class World(
         // gets the world coordinates from a click
         val center = cameraCenter(this)
 
-        val xW = x + center.x - halfScreenSize.x
-        val yW = y + center.y - halfScreenSize.y
+        val xW = x + center.x - halfPlayAreaSize.x - leftColumn.x
+        val yW = y + center.y - halfPlayAreaSize.y
 
         return Vec2[xW, yW]
     }

@@ -13,4 +13,8 @@ class RangedValue(
     fun damage(damage: Int) {
         current -= damage
     }
+
+    override fun toString(): String {
+        return "${current}/${max}"
+    }
 }

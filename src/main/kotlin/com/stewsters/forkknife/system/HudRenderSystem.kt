@@ -1,0 +1,84 @@
+package com.stewsters.forkknife.system
+
+import com.stewsters.forkknife.rightColumn
+import com.stewsters.forkknife.screenSize
+import com.stewsters.forkknife.world.World
+import kaiju.math.getChebyshevDistance
+import org.hexworks.zircon.api.data.Position
+import org.hexworks.zircon.api.data.Tile
+import org.hexworks.zircon.api.graphics.StyleSet
+import org.hexworks.zircon.api.screen.Screen
+
+object HudRenderSystem {
+
+    fun process(world: World, screen: Screen) {
+//       gameMap.
+
+        // left side
+        // Left menu - our squad, info
+        // Right menu- others we can see.
+
+//        screen.foregroundColor = ANSITileColor.WHITE
+        var i = 0
+        val characters = world.characters
+        characters.forEach { entity ->
+            val ch = entity.appearance?.ch ?: " "
+            val shoot = if (entity.creature?.shooting ?: false) "-" else " "
+            val hp = entity.creature?.hp ?: "   "
+            val armor = entity.creature?.armor ?: "   "
+            write(screen, 0, i++, "${ch}${shoot} ${hp} ${armor}")
+            write(screen, 0, i++, entity.name)
+            entity.creature?.primary?.apply {
+                write(screen, 0, i++, gunType.name)
+            }
+            entity.creature?.secondary?.apply {
+                write(screen, 0, i++, gunType.name)
+            }
+            i++
+        }
+
+        // get players in vision, sort by proximity to main
+
+        // number just fired hp/max armor/max
+        // Name
+        // Weapon - Ammo/max
+        //  Gear on weapon
+        // secondary - Ammo/max
+        //  Gear on weapon
+
+
+        // Teams left - players left
+        i = 0
+        val x = screenSize.x - rightColumn.x
+        world.actors
+            .filter { (it.pos!=null) && !characters.contains(it) }
+            .sortedBy { getChebyshevDistance(characters[world.selectedChar].pos!!, it.pos!!) }
+            .forEach { entity ->
+            val ch = entity.appearance?.ch ?: " "
+            val shoot = if (entity.creature?.shooting ?: false) "-" else " "
+            val hp = entity.creature?.hp ?: "   "
+            val armor = entity.creature?.armor ?: "   "
+            write(screen, x, i++, "${ch}${shoot} ${hp} ${armor}")
+            write(screen, x, i++, entity.name)
+            entity.creature?.primary?.apply {
+                write(screen, x, i++, gunType.name)
+            }
+            entity.creature?.secondary?.apply {
+                write(screen, x, i++, gunType.name)
+            }
+            i++
+        }
+
+    }
+
+    private fun write(screen: Screen, x: Int, y: Int, text: String) {
+        text.take(10).forEachIndexed { index, c ->
+            screen.setTileAt(
+                Position.create(x + index, y),
+                Tile.createCharacterTile(c, StyleSet.defaultStyle())
+            )
+
+        }
+
+    }
+}
