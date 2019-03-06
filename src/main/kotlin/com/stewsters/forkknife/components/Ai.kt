@@ -18,7 +18,7 @@ sealed class Plan
 
 class WalkTo(var path: List<Vec2>) : Plan()
 
-class ShootAt(val target: Entity) : Plan()
+class ShootAt() : Plan()
 
 class Loot(val target: Entity) : Plan()
 
@@ -52,6 +52,18 @@ class PlayerAI : AI {
                 }
             }
             is ShootAt -> with(plan as ShootAt) {
+
+                val gun = entity.creature?.primary
+                if (gun == null)
+                    return
+
+                val target = world.closestVisibleEnemyInRange(entity, gun.getRange())
+
+                if(target==null){
+                    // no targets
+                    return
+                }
+
                 if (target.creature == null) {
                     println("Not alive to shoot")
                     return
@@ -62,6 +74,9 @@ class PlayerAI : AI {
                     println("Shooting a dead horse")
                     return
                 }
+
+                target.creature.doDamage(gun.getDamage())
+
             }
             is Loot -> with(plan as Loot) {
                 val pos = target.pos

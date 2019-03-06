@@ -1,9 +1,11 @@
 package com.stewsters.forkknife.system
 
+import com.stewsters.forkknife.leftColumn
 import com.stewsters.forkknife.rightColumn
 import com.stewsters.forkknife.screenSize
 import com.stewsters.forkknife.world.World
 import kaiju.math.getChebyshevDistance
+import kaiju.math.getEuclideanDistance
 import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.graphics.StyleSet
@@ -12,7 +14,22 @@ import org.hexworks.zircon.api.screen.Screen
 object HudRenderSystem {
 
     fun process(world: World, screen: Screen) {
-//       gameMap.
+        // blank columns out, something is weird with the clear
+        val tile = Tile.createCharacterTile(' ', StyleSet.defaultStyle())
+        for (x in 0 until leftColumn.x) {
+            for (y in 0 until leftColumn.y) {
+                screen.setTileAt(
+                    Position.create(x, y), tile
+                )
+            }
+        }
+        for (x in 0..rightColumn.x) {
+            for (y in 0..rightColumn.y) {
+                screen.setTileAt(
+                    Position.create(screenSize.x - x, y), tile
+                )
+            }
+        }
 
         // left side
         // Left menu - our squad, info
@@ -50,24 +67,27 @@ object HudRenderSystem {
         // Teams left - players left
         i = 0
         val x = screenSize.x - rightColumn.x
+        val charPos = characters[world.selectedChar].pos!!
         world.actors
-            .filter { (it.pos!=null) && !characters.contains(it) }
-            .sortedBy { getChebyshevDistance(characters[world.selectedChar].pos!!, it.pos!!) }
+            .filter {
+                (it.pos != null) && !characters.contains(it) && getEuclideanDistance(it.pos!!, charPos) < 18
+            }
+            .sortedBy { getChebyshevDistance(charPos, it.pos!!) }
             .forEach { entity ->
-            val ch = entity.appearance?.ch ?: " "
-            val shoot = if (entity.creature?.shooting ?: false) "-" else " "
-            val hp = entity.creature?.hp ?: "   "
-            val armor = entity.creature?.armor ?: "   "
-            write(screen, x, i++, "${ch}${shoot} ${hp} ${armor}")
-            write(screen, x, i++, entity.name)
-            entity.creature?.primary?.apply {
-                write(screen, x, i++, gunType.name)
+                val ch = entity.appearance?.ch ?: " "
+                val shoot = if (entity.creature?.shooting ?: false) "-" else " "
+                val hp = entity.creature?.hp ?: "   "
+                val armor = entity.creature?.armor ?: "   "
+                write(screen, x, i++, "${ch}${shoot} ${hp} ${armor}")
+                write(screen, x, i++, entity.name)
+                entity.creature?.primary?.apply {
+                    write(screen, x, i++, gunType.name)
+                }
+                entity.creature?.secondary?.apply {
+                    write(screen, x, i++, gunType.name)
+                }
+                i++
             }
-            entity.creature?.secondary?.apply {
-                write(screen, x, i++, gunType.name)
-            }
-            i++
-        }
 
     }
 

@@ -31,28 +31,42 @@ class Gun(
     var magazine: Magazine? = null,
     var barrel: Barrel? = null,
     var stock: Stock? = null
-) : Item(Quality.WHITE)
+) : Item(Quality.WHITE) {
 
-enum class GunType(val ammoType: AmmoType) {
+    fun getRange(): Int {
+        return gunType.baseRange + (scope?.quality?.value ?: 0)
+    }
+
+    fun getDamage(): Int {
+        return gunType.baseDamage + (barrel?.quality?.value ?: 0)
+    }
+    //TODO: magazine, stock
+}
+
+enum class GunType(
+    val ammoType: AmmoType,
+    val baseDamage: Int,
+    val baseRange: Int
+) {
     // pistol
-    PISTOL(AmmoType.LIGHT),
+    PISTOL(AmmoType.LIGHT, 1, 5),
 
     // smg
-    PDW(AmmoType.LIGHT),
+    PDW(AmmoType.LIGHT, 2, 5),
 
     // shotgun
-    SHOTGUN(AmmoType.SHOTGUN),
+    SHOTGUN(AmmoType.SHOTGUN, 3, 4),
 
     // assault rifle
-    AR(AmmoType.HEAVY),
+    AR(AmmoType.HEAVY, 2, 10),
 
     // LMG -
-    LMG(AmmoType.HEAVY),
+    LMG(AmmoType.HEAVY, 3, 8),
 
-    DMR(AmmoType.HEAVY),
+    DMR(AmmoType.HEAVY, 1, 14),
 
     // sniper - long range, needs reload after each fire
-    SNIPER(AmmoType.SNIPER)
+    SNIPER(AmmoType.SNIPER, 2, 18)
 }
 
 // ammo capacity

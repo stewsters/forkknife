@@ -1,8 +1,11 @@
 package com.stewsters.forkknife.world
 
-import com.stewsters.forkknife.*
 import com.stewsters.forkknife.components.*
+import com.stewsters.forkknife.getFemaleName
+import com.stewsters.forkknife.getMaleName
 import com.stewsters.forkknife.math.RangedValue
+import com.stewsters.forkknife.worldCenter
+import com.stewsters.forkknife.worldSize
 import kaiju.math.*
 import org.hexworks.zircon.api.color.ANSITileColor
 
@@ -39,14 +42,6 @@ object MapGen {
 
             // can we place it there
 
-            println("walling $upperLeft")
-//            for (x in (upperLeft.x..(upperLeft.x + buildingDimentions.x))) {
-//                for (y in (upperLeft.y..(upperLeft.y + buildingDimentions.y))) {
-//                    world.map[x, y].type = TerrainType.WALL
-//
-//                }
-//            }
-
             val top = getBoolean()
             val bottom = getBoolean()
             val left = getBoolean()
@@ -66,8 +61,6 @@ object MapGen {
                     if (right && yCenter == y) TerrainType.DOOR else TerrainType.WALL
             }
 
-            // TODO: put a box of treasure in each area
-
             val gearXY = Vec2[
                     upperLeft.x + getIntInRange(1, buildingDimentions.x - 2),
                     upperLeft.y + getIntInRange(1, buildingDimentions.y - 2)
@@ -86,11 +79,11 @@ object MapGen {
 
             // random xy pos
             val teamStarts = Vec2(
-                getIntInRange(0, world.map.xSize - 1),
-                getIntInRange(0, world.map.ySize - 1)
+                getIntInRange(2, world.map.xSize - 3),
+                getIntInRange(2, world.map.ySize - 3)
             )
                 .inclusiveVonNeumanNeighborhood()
-                .filter { world.map.contains(it) }
+                .filter { world.map.contains(it) && !world.map[it].type.blocks }
                 .shuffled()
 
             repeat(3) {

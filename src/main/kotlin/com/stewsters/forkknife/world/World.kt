@@ -3,21 +3,30 @@ package com.stewsters.forkknife.world
 import com.stewsters.forkknife.components.Entity
 import com.stewsters.forkknife.halfPlayAreaSize
 import com.stewsters.forkknife.leftColumn
+import com.stewsters.forkknife.math.Bresenham2d
+import com.stewsters.forkknife.math.LosEvaluator
 import com.stewsters.forkknife.worldCenter
 import kaiju.math.Matrix2d
 import kaiju.math.Vec2
 import kaiju.math.getEuclideanDistance
 import kaiju.math.max
 import org.hexworks.zircon.api.data.Position
+import kotlin.streams.toList
 
 class World(
 //    val size: Vec3,
     val map: Matrix2d<Cell>,
     var cameraCenter: (world: World) -> Vec2
 ) {
+    val losEntity = LosEvaluator(this)
 
-    val characters: MutableList<Entity> = mutableListOf()
+    val characters = mutableListOf<Entity>()
     var selectedChar = 0
+
+    fun getSelectedCharacter(): Entity {
+        return characters[selectedChar]
+    }
+
 
     val actors = mutableListOf<Entity>() // with ai
 
@@ -108,6 +117,16 @@ class World(
     var radius = max(worldCenter.x, worldCenter.y) * 1.414
 
     fun isOutside(pos: Vec2): Boolean = getEuclideanDistance(center, pos) > radius
+
+    fun closestVisibleEnemyInRange(entity: Entity, range: Int): Entity? {
+        return actors.stream()
+            .filter { it.squad != entity.squad && it.creature != null }
+            .filter { it.creature?.hp?.current ?: 0 > 0 }
+            .filter { getEuclideanDistance(entity.pos!!, it.pos!!) <= range }
+            .filter { Bresenham2d.los(entity.pos!!, it.pos!!, losEntity) }
+            .toList()
+            .minBy { getEuclideanDistance(entity.pos!!, it.pos!!) }
+    }
 
 }
 
