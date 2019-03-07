@@ -1,6 +1,7 @@
 package com.stewsters.forkknife.components
 
 import com.stewsters.forkknife.math.RangedValue
+import kotlin.math.min
 
 class Creature(
     val hp: RangedValue,
@@ -20,20 +21,25 @@ class Creature(
         return 6 + (backpack?.quality?.value ?: 0)
     }
 
-    fun doDamage(damage: Int) {
+    fun takeDamage(damage: Int) {
+        var remainingDamage = damage
         //TODO: need to deal damage
         // if we have armor, remove from that
 
-        // if we have life, remove from that
 
-        // if we reach zero, we ded
+        if (remainingDamage > 0 && armor.current > 0) {
+            val armorDamage = min(armor.current, remainingDamage)
+            armor.damage(armorDamage)
+            remainingDamage -= armorDamage
+        }
+        if (remainingDamage > 0 && hp.current > 0) {
+            val healthDamage = min(hp.current, remainingDamage)
+            hp.damage(healthDamage)
+            // todo: overdamage?
 
-//        var damage =
-//            if(damage>0 && target.creature.armor.current>0){
-//                val doneToArm
-//                target.creature.armor.damage()
-//            }
-//
-//        target.creature.hp
-    }
+            // todo: death
+            if(hp.current<=0)
+                println("Death")
+        }
+     }
 }

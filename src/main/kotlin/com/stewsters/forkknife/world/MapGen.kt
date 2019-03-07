@@ -23,7 +23,7 @@ object MapGen {
                 Cell(type, mutableListOf())
             },
             {
-                it.characters[it.selectedChar].pos ?: worldCenter
+                it.getSelectedCharacter().pos ?: worldCenter
             }
         )
 

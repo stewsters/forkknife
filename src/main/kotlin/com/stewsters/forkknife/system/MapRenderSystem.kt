@@ -56,7 +56,7 @@ object MapRenderSystem {
                 if (highlightPath.contains(worldPos)) {
                     back = ANSITileColor.GREEN
                 } else {
-                    val playerAI = world.characters[world.selectedChar].ai as PlayerAI
+                    val playerAI = world.getSelectedCharacter().ai as PlayerAI
                     if (playerAI.highlight(worldPos)) {
                         back = ANSITileColor.YELLOW
                     }

@@ -88,7 +88,18 @@ class World(
     fun passTime(world: World) {
         // each person does what they do.  Then AI do what they do
         println(turn++)
-        world.actors.forEach { it.ai?.act(it, world) }
+
+        // If players are dead, stop
+
+        // if all not players are dead, stop
+
+
+        world.actors.forEach {
+            val ai = it.ai ?: return
+            val action = ai.getNextAction(it, world)
+            action.onPerform(world, it)
+
+        }
     }
 
     var pcId = 0

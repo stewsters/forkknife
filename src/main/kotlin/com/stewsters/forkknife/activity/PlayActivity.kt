@@ -1,6 +1,8 @@
 package com.stewsters.forkknife.activity
 
 import com.stewsters.forkknife.BrGame
+import com.stewsters.forkknife.actions.ShootNearest
+import com.stewsters.forkknife.actions.WalkToPoint
 import com.stewsters.forkknife.highlightPath
 import com.stewsters.forkknife.system.HudRenderSystem
 import com.stewsters.forkknife.system.MapRenderSystem
@@ -8,7 +10,6 @@ import com.stewsters.forkknife.world.World
 import com.stewsters.forkknife.worldSize
 import kaiju.math.Vec2
 import kaiju.math.getChebyshevDistance
-import kaiju.math.getEuclideanDistance
 import kaiju.pathfinder.findPath2d
 import org.hexworks.zircon.api.Screens
 import org.hexworks.zircon.api.data.Position
@@ -29,30 +30,15 @@ class PlayActivity(val game: BrGame, val world: World) : Activity {
         return when (mouseAction.actionType) {
             MouseActionType.MOUSE_PRESSED -> {
 
-                val character = world.characters[world.selectedChar]
+                val character = world.getSelectedCharacter()
                 val pos = world.screenToMap(mouseAction.position)
 
-                if (character.ai != null) {
-
-                    val path = findPath2d(
-                        size = worldSize,
-                        cost = { 1.0 },
-                        heuristic = { one, two -> getEuclideanDistance(one, two).toDouble() },
-                        neighbors = {
-                            it.vonNeumanNeighborhood().filter { vec ->
-                                !world.map[it].type.blocks &&
-                                        world.map[it].entities.filter { it != character }.isEmpty()
-                            }
-                        },
-                        start = character.pos!!,
-                        end = Vec2(pos.x, pos.y)
-                    )
-
-                    if (path != null) {
-                        character.ai.go(path)
-                        highlightPath = listOf()
-                    }
+                if (character.ai == null) {
+                    return false
                 }
+                character.ai.setAction(WalkToPoint(pos))
+                highlightPath = listOf()
+
                 return true
             }
             MouseActionType.MOUSE_MOVED -> {
@@ -61,7 +47,7 @@ class PlayActivity(val game: BrGame, val world: World) : Activity {
                 }
                 target = mouseAction.position
 
-                val character = world.characters[world.selectedChar]
+                val character = world.getSelectedCharacter()
                 val pos = world.screenToMap(mouseAction.position)
 
                 val path = findPath2d(
@@ -94,6 +80,7 @@ class PlayActivity(val game: BrGame, val world: World) : Activity {
             '1' -> world.selectedChar = 0
             '2' -> world.selectedChar = 1
             '3' -> world.selectedChar = 2
+            'f' -> world.getSelectedCharacter()?.ai?.setAction(ShootNearest())
             ' ' -> world.passTime(world)
         }
 
