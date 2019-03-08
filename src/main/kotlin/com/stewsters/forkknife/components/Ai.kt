@@ -29,7 +29,7 @@ class PlayerAI : AI {
 
     override fun highlight(worldPos: Vec2): Boolean {
         if (action is WalkToPoint)
-            return (action as WalkToPoint).pos == worldPos
+            return (action as WalkToPoint).destination == worldPos
         return false
     }
 }

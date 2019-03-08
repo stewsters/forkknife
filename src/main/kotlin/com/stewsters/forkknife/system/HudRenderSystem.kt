@@ -43,10 +43,16 @@ object HudRenderSystem {
             val shoot = if (entity.creature?.shooting ?: false) "-" else " "
             val hp = entity.creature?.hp ?: "   "
             val armor = entity.creature?.armor ?: "   "
-            write(screen, 0, i++, "${ch}${shoot} ${hp} ${armor}")
             write(screen, 0, i++, entity.name)
+            write(screen, 0, i++, "${ch}${shoot} ${hp} ${armor}")
             entity.creature?.primary?.apply {
-                write(screen, 0, i++, gunType.name)
+                write(screen, 0, i, gunType.name)
+
+                write(screen, 6, i, (this.barrel?.quality?.value ?: 0).toString())
+                write(screen, 6, i, (this.scope?.quality?.value ?: 0).toString())
+                write(screen, 6, i, (this.magazine?.quality?.value ?: 0).toString())
+                write(screen, 6, i, (this.stock?.quality?.value ?: 0).toString())
+                i++
             }
             entity.creature?.secondary?.apply {
                 write(screen, 0, i++, gunType.name)

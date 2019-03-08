@@ -38,8 +38,8 @@ class Creature(
             // todo: overdamage?
 
             // todo: death
-            if(hp.current<=0)
+            if (hp.current <= 0)
                 println("Death")
         }
-     }
+    }
 }

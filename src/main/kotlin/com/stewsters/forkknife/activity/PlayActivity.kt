@@ -8,8 +8,7 @@ import com.stewsters.forkknife.system.HudRenderSystem
 import com.stewsters.forkknife.system.MapRenderSystem
 import com.stewsters.forkknife.world.World
 import com.stewsters.forkknife.worldSize
-import kaiju.math.Vec2
-import kaiju.math.getChebyshevDistance
+import kaiju.math.getEuclideanDistance
 import kaiju.pathfinder.findPath2d
 import org.hexworks.zircon.api.Screens
 import org.hexworks.zircon.api.data.Position
@@ -48,20 +47,20 @@ class PlayActivity(val game: BrGame, val world: World) : Activity {
                 target = mouseAction.position
 
                 val character = world.getSelectedCharacter()
-                val pos = world.screenToMap(mouseAction.position)
+                val destination = world.screenToMap(mouseAction.position)
 
                 val path = findPath2d(
                     size = worldSize,
                     cost = { 1.0 },
-                    heuristic = { one, two -> getChebyshevDistance(one, two).toDouble() },
+                    heuristic = { one, two -> getEuclideanDistance(one, two) },
                     neighbors = {
                         it.vonNeumanNeighborhood().filter { vec ->
                             !world.map[it].type.blocks &&
-                                    world.map[it].entities.filter { it != character }.isEmpty()
+                                    world.map[it].entities.filter { it != character && it.creature != null }.isEmpty()
                         }
                     },
                     start = character.pos!!,
-                    end = Vec2(pos.x, pos.y)
+                    end = destination
                 )
 
                 highlightPath = path ?: listOf()

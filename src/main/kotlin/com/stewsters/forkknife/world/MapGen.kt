@@ -82,7 +82,7 @@ object MapGen {
                 getIntInRange(2, world.map.xSize - 3),
                 getIntInRange(2, world.map.ySize - 3)
             )
-                .inclusiveVonNeumanNeighborhood()
+                .inclusiveMooreNeighborhood()
                 .filter { world.map.contains(it) && !world.map[it].type.blocks }
                 .shuffled()
 

@@ -3,7 +3,7 @@ package com.stewsters.forkknife.actions
 import com.stewsters.forkknife.components.Entity
 import com.stewsters.forkknife.world.World
 
-class ShootNearest:Action{
+class ShootNearest : Action {
 
     override fun onPerform(world: World, entity: Entity): ActionResult {
         val gun = entity.creature?.primary
@@ -12,7 +12,7 @@ class ShootNearest:Action{
 
         val target = world.closestVisibleEnemyInRange(entity, gun.getRange())
 
-        if(target==null){
+        if (target == null) {
             // no targets
             return Failed
         }

@@ -8,18 +8,18 @@ import kaiju.math.getEuclideanDistance
 import kaiju.pathfinder.findPath2d
 
 class WalkToPoint(
-    val pos: Vec2
+    val destination: Vec2
 ) : Action {
 
     override fun onPerform(world: World, entity: Entity): ActionResult {
-        if (entity.pos == pos)
+        if (entity.pos == destination)
             return Succeeded
 
         // path to point
         val path = findPath2d(
             size = worldSize,
             cost = { 1.0 },
-            heuristic = { one, two -> getEuclideanDistance(one, two).toDouble() },
+            heuristic = { one, two -> getEuclideanDistance(one, two) },
             neighbors = {
                 it.vonNeumanNeighborhood().filter { vec ->
                     !world.map[it].type.blocks &&
@@ -27,7 +27,7 @@ class WalkToPoint(
                 }
             },
             start = entity.pos!!,
-            end = Vec2(pos.x, pos.y)
+            end = destination
         )
 
         if (path == null || path.size < 2)
@@ -41,11 +41,25 @@ class WalkToPoint(
 
         world.move(entity, path[1])
 
+        val meleeTargets = next.entities.filter {
+            it.creature != null
+                    && it.squad != null && entity.squad != null
+                    && it.squad.id != entity.squad.id
+        }
+        if (meleeTargets.isNotEmpty()) {
+            return Melee(meleeTargets.first()).onPerform(world, entity)
+        }
+
         // get next step, go there
+        if (next.entities.filter { it.creature == null }.isNotEmpty()) {
+            // Free loot pickup
+            return Loot().onPerform(world, entity)
+            //return Alternative(Loot())
+        }
+
 
         // if standing on loot box, loot next turn
-
-        if (entity.pos == pos)
+        if (entity.pos == destination)
             return Succeeded
         else
             return InProgress

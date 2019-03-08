@@ -13,11 +13,11 @@ import org.hexworks.zircon.api.input.KeyStroke
 import org.hexworks.zircon.api.input.MouseAction
 import org.hexworks.zircon.api.kotlin.onInput
 
-val playAreaScreenSize = Vec2[40,40]
+val playAreaScreenSize = Vec2[40, 40]
 val halfPlayAreaSize = Vec2[playAreaScreenSize.x / 2, playAreaScreenSize.y / 2]
 
-val leftColumn = Vec2[10,40]
-val rightColumn = Vec2[10,40]
+val leftColumn = Vec2[10, 40]
+val rightColumn = Vec2[10, 40]
 
 val screenSize = Vec2[playAreaScreenSize.x + leftColumn.x + rightColumn.x, 40]
 
