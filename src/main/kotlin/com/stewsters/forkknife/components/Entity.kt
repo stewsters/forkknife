@@ -20,5 +20,5 @@ class Entity(
     val squad: Squad? = null
 
 ) {
-    val lastShot: Int=-1
+    val lastShot: Int = -1
 }

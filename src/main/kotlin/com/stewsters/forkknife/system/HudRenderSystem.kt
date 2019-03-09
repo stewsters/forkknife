@@ -70,11 +70,10 @@ object HudRenderSystem {
         //  Gear on weapon
 
 
-
         // Teams left - players left
         i = 1
         val x = screenSize.x - rightColumn.x
-        write(screen,x,0,"Squads ${world.actors.map{it.squad}.distinct().size}")
+        write(screen, x, 0, "Squads ${world.actors.map { it.squad }.distinct().size}")
 
         val charPos = characters[world.selectedChar].pos!!
         world.actors

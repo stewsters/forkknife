@@ -21,7 +21,7 @@ class Creature(
         return 6 + (backpack?.quality?.value ?: 0)
     }
 
-    fun takeDamage(us:Entity, damage: Int) {
+    fun takeDamage(us: Entity, damage: Int) {
         var remainingDamage = damage
         //TODO: need to deal damage
         // if we have armor, remove from that

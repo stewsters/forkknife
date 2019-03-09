@@ -6,13 +6,11 @@ import org.hexworks.zircon.api.Screens
 import org.hexworks.zircon.api.data.Position
 import org.hexworks.zircon.api.input.KeyStroke
 import org.hexworks.zircon.api.kotlin.onMousePressed
-import org.hexworks.zircon.api.screen.Screen
 
 class MenuActivity(val game: BrGame) : Activity {
-    val screen: Screen
+    val screen = Screens.createScreenFor(game.terminal)
 
     init {
-        screen = Screens.createScreenFor(game.terminal)
 
         val header = Components.header()
             .withPosition(Position.create(20, 15))

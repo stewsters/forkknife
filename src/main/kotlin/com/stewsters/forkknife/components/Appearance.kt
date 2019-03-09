@@ -6,5 +6,5 @@ class Appearance(
     val ch: Char,
     val color: TileColor,
     val back: TileColor? = null,
-    val priority:Int = 0
+    val priority: Int = 0
 )

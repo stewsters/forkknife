@@ -46,7 +46,7 @@ object MapRenderSystem {
                 } else {
 
                     val cell = world.map[worldPos]
-                    val entity = cell.entities.sortedByDescending { it.appearance?.priority?:-1 }.firstOrNull()
+                    val entity = cell.entities.sortedByDescending { it.appearance?.priority ?: -1 }.firstOrNull()
 
                     if (entity?.appearance != null) {
                         fore = entity.appearance.color
@@ -60,8 +60,12 @@ object MapRenderSystem {
                     }
                 }
 
+
                 if (highlightPath.contains(worldPos)) {
                     back = ANSITileColor.YELLOW
+                } else if (world.isOutsideRing(worldPos)) {
+                    back = ANSITileColor.BRIGHT_RED
+
                 } else {
                     val playerAI = world.getSelectedCharacter().ai as PlayerAI
                     if (playerAI.highlight(worldPos)) {

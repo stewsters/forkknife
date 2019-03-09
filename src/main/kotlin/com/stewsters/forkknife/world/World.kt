@@ -6,10 +6,7 @@ import com.stewsters.forkknife.leftColumn
 import com.stewsters.forkknife.math.Bresenham2d
 import com.stewsters.forkknife.math.LosEvaluator
 import com.stewsters.forkknife.worldCenter
-import kaiju.math.Matrix2d
-import kaiju.math.Vec2
-import kaiju.math.getEuclideanDistance
-import kaiju.math.max
+import kaiju.math.*
 import org.hexworks.zircon.api.data.Position
 import kotlin.streams.toList
 
@@ -27,6 +24,14 @@ class World(
         return characters[selectedChar]
     }
 
+    val ringCenter = Vec2[
+            getIntInRange(map.xSize / 4, 3 * map.xSize / 4),
+            getIntInRange(map.ySize / 4, 3 * map.ySize / 4)
+    ]
+
+    var radius = max(worldCenter.x, worldCenter.y) * 1.414
+
+    fun isOutsideRing(pos: Vec2): Boolean = getEuclideanDistance(ringCenter, pos) > radius
 
     val actors = mutableListOf<Entity>() // with ai
 
@@ -89,7 +94,10 @@ class World(
         // each person does what they do.  Then AI do what they do
         println(turn++)
 
+        if ((turn / 20) % 2 == 0)
+            radius -= 1 // todo, close, then hold
         // If players are dead, stop
+
 
         // if all not players are dead, stop
 
@@ -98,7 +106,9 @@ class World(
             val ai = it.ai ?: return
             val action = ai.getNextAction(it, world)
             action.onPerform(world, it)
-
+            if (isOutsideRing(it.pos!!)) {
+                it.creature?.takeDamage(it, 1)
+            }
         }
     }
 
@@ -123,11 +133,6 @@ class World(
         return char
     }
 
-
-    var center = worldCenter
-    var radius = max(worldCenter.x, worldCenter.y) * 1.414
-
-    fun isOutside(pos: Vec2): Boolean = getEuclideanDistance(center, pos) > radius
 
     fun closestVisibleEnemyInRange(entity: Entity, range: Int): Entity? {
         return actors.stream()

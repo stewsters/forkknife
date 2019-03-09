@@ -80,7 +80,14 @@ class PlayActivity(val game: BrGame, val world: World) : Activity {
             '2' -> world.selectedChar = 1
             '3' -> world.selectedChar = 2
             'f' -> world.getSelectedCharacter()?.ai?.setAction(ShootNearest())
-            ' ' -> world.passTime(world)
+            ' ' -> {
+                world.passTime(world)
+                if (world.characters.none { it.creature?.hp?.current ?: 0 > 0 }) {
+                    println("All characters dead")
+                    game.activity = LoseActivity(game, world)
+                }
+
+            }
         }
 
         highlightPath = listOf()
