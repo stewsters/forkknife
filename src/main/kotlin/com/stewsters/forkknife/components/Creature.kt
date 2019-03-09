@@ -5,8 +5,7 @@ import kotlin.math.min
 
 class Creature(
     val hp: RangedValue,
-    val armor: RangedValue,
-    val speed: Int,
+    var armor: RangedValue,
 
     var bodyArmor: BodyArmor? = null,
     var headArmor: Helmet? = null,
@@ -40,9 +39,28 @@ class Creature(
             // todo: death
             if (hp.current <= 0) {
                 println("Death of ${us.name}")
-//                us.creature=null
-                // TODO: move gear into inventory
+
+                us.appearance?.ch = '%'
+                us.appearance?.priority = 0
+
+                if (us.inventory == null)
+                    us.inventory = Inventory(mutableListOf())
+
+                val inventory = us.inventory!!
+
+                listOf(bodyArmor, headArmor, primary, secondary, backpack).forEach {
+                    it.apply {
+                        inventory.items.add(
+                            Entity(
+                                name = this.toString(),
+                                item = this
+                            )
+                        )
+                    }
+                }
+
             }
+            // TODO: move gear into inventory
         }
     }
 }

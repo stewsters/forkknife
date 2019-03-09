@@ -12,7 +12,7 @@ class Entity(
 
     val creature: Creature? = null,
 
-    val inventory: Inventory? = null,
+    var inventory: Inventory? = null,
 
     val item: Item? = null,
 

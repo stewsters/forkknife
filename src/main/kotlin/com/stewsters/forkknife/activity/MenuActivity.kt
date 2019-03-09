@@ -14,7 +14,7 @@ class MenuActivity(val game: BrGame) : Activity {
 
         val header = Components.header()
             .withPosition(Position.create(20, 15))
-            .withText("Battle Royale")
+            .withText("Forkknife: Battle Royale")
             .build()
 
         val play = Components.button()

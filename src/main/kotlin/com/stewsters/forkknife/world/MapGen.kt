@@ -125,7 +125,6 @@ object MapGen {
             appearance = appearance,
             creature = Creature(
                 hp = RangedValue(4),
-                speed = 8,
                 armor = RangedValue(0)
             ),
             inventory = Inventory(mutableListOf()),
@@ -139,28 +138,45 @@ object MapGen {
     }
 
 
+    val randomTypes =
+        Quality.values().map { BodyArmor(it) } +
+                Quality.values().map { Helmet(it) } +
+                Quality.values().map { Scope(it) } +
+                Quality.values().map { Stock(it) } +
+                Quality.values().map { Magazine(it) } +
+                Quality.values().map { Barrel(it) }
+
     private fun buildRandomLoot(pos: Vec2): Entity {
         val gear = mutableListOf<Entity>()
 
-
-        val gunType = GunType.values().random()
-        gear.add(
-            Entity(
-                name = gunType.name,
-                item = Gun(
-                    gunType = gunType
+        if (getBoolean()) {
+            val gunType = GunType.values().random()
+            gear.add(
+                Entity(
+                    name = gunType.name,
+                    item = Gun(
+                        gunType = gunType
+                    )
                 )
             )
-        )
-        gear.add(
-            Entity(
-                name = gunType.ammoType.name,
-                item = AmmoBox(
-                    ammoType = gunType.ammoType,
-                    quantity = d(30)
+            gear.add(
+                Entity(
+                    name = gunType.ammoType.name,
+                    item = AmmoBox(
+                        ammoType = gunType.ammoType,
+                        quantity = d(30)
+                    )
                 )
             )
-        )
+        }
+        randomTypes.random().apply {
+            gear.add(
+                Entity(
+                    name = "",
+                    item = this
+                )
+            )
+        }
 
 
         return Entity(

@@ -86,6 +86,11 @@ class PlayActivity(val game: BrGame, val world: World) : Activity {
                     println("All characters dead")
                     game.activity = LoseActivity(game, world)
                 }
+                if (world.actors.none { it.creature?.hp?.current ?: 0 > 0 && it.squad?.id != 0 }) {
+                    println("Opposition Dead")
+                    game.activity = WinActivity(game)
+                }
+
 
             }
         }

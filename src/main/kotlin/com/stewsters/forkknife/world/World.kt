@@ -29,7 +29,7 @@ class World(
             getIntInRange(map.ySize / 4, 3 * map.ySize / 4)
     ]
 
-    var radius = max(worldCenter.x, worldCenter.y) * 1.414
+    var radius = max(worldCenter.x, worldCenter.y) * 2
 
     fun isOutsideRing(pos: Vec2): Boolean = getEuclideanDistance(ringCenter, pos) > radius
 
@@ -94,18 +94,21 @@ class World(
         // each person does what they do.  Then AI do what they do
         println(turn++)
 
-        if ((turn / 20) % 2 == 0)
+        if ((turn / 20) % 3 == 0)
             radius -= 1 // todo, close, then hold
         // If players are dead, stop
 
 
         // if all not players are dead, stop
 
-
         world.actors.forEach {
-            val ai = it.ai ?: return
-            val action = ai.getNextAction(it, world)
-            action.onPerform(world, it)
+
+            if (it.creature?.hp?.current ?: 0 > 0) {
+                val ai = it.ai ?: return
+                val action = ai.getNextAction(it, world)
+                action.onPerform(world, it)
+            }
+
             if (isOutsideRing(it.pos!!)) {
                 it.creature?.takeDamage(it, 1)
             }
