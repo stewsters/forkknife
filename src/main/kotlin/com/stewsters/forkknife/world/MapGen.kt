@@ -73,7 +73,7 @@ object MapGen {
 
         // drop some powerups
 
-        repeat(10) { squadId ->
+        repeat(20) { squadId ->
 
             val squad = Squad(squadId)
 
@@ -90,12 +90,14 @@ object MapGen {
                 val appearance = if (squad.id == 0)
                     Appearance(
                         world.getPcGlyph(),
-                        ANSITileColor.WHITE
+                        ANSITileColor.WHITE,
+                        priority = 3
                     )
                 else {
                     Appearance(
                         world.getNpcGlyph(),
-                        ANSITileColor.RED
+                        ANSITileColor.RED,
+                        priority = 2
                     )
                 }
 

@@ -28,18 +28,25 @@ object MapRenderSystem {
                 var char: Char
 
                 //Todo: if they shot highlight, if they are allies show number
-                if (!world.map.contains(worldPos) ||
-                    !(Bresenham2d.los(pos.x, pos.y, worldPos.x, worldPos.y, los) ||
-                            Bresenham2d.los(worldPos.x, worldPos.y, pos.x, pos.y, los))
-                ) {
+                if (!world.map.contains(worldPos)) {
                     fore = ANSITileColor.BLACK
                     back = ANSITileColor.BLACK
                     char = ' '
 
+                } else if (!(Bresenham2d.los(pos.x, pos.y, worldPos.x, worldPos.y, los)
+                            || Bresenham2d.los(worldPos.x, worldPos.y, pos.x, pos.y, los))
+                ) {
+                    fore = ANSITileColor.BLACK
+                    back = ANSITileColor.BLACK
+                    char = ' '
+                } else if (world.map[worldPos].entities.any { it.lastShot == world.turn }) {
+                    fore = ANSITileColor.BLACK
+                    back = ANSITileColor.YELLOW
+                    char = ' '
                 } else {
 
                     val cell = world.map[worldPos]
-                    val entity = cell.entities.firstOrNull()
+                    val entity = cell.entities.sortedByDescending { it.appearance?.priority?:-1 }.firstOrNull()
 
                     if (entity?.appearance != null) {
                         fore = entity.appearance.color
@@ -54,11 +61,11 @@ object MapRenderSystem {
                 }
 
                 if (highlightPath.contains(worldPos)) {
-                    back = ANSITileColor.GREEN
+                    back = ANSITileColor.YELLOW
                 } else {
                     val playerAI = world.getSelectedCharacter().ai as PlayerAI
                     if (playerAI.highlight(worldPos)) {
-                        back = ANSITileColor.YELLOW
+                        back = ANSITileColor.GREEN
                     }
                 }
 

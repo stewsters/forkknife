@@ -19,4 +19,6 @@ class Entity(
     val ai: AI? = null,
     val squad: Squad? = null
 
-)
+) {
+    val lastShot: Int=-1
+}

@@ -21,7 +21,7 @@ class Creature(
         return 6 + (backpack?.quality?.value ?: 0)
     }
 
-    fun takeDamage(damage: Int) {
+    fun takeDamage(us:Entity, damage: Int) {
         var remainingDamage = damage
         //TODO: need to deal damage
         // if we have armor, remove from that
@@ -38,8 +38,11 @@ class Creature(
             // todo: overdamage?
 
             // todo: death
-            if (hp.current <= 0)
-                println("Death")
+            if (hp.current <= 0) {
+                println("Death of ${us.name}")
+//                us.creature=null
+                // TODO: move gear into inventory
+            }
         }
     }
 }
