@@ -27,6 +27,8 @@ val worldCenter = Vec2(worldSize.x / 2, worldSize.y / 2)
 
 var highlightPath = listOf<Vec2>()
 
+val sightRange = 18
+
 
 class BrGame(val terminal: TileGrid, var activity: Activity? = null) {
 

@@ -1,3 +1,8 @@
 package com.stewsters.forkknife.components
 
-class Squad(val id: Int)
+import kaiju.math.Vec2
+
+class Squad(
+    val id: Int,
+    var goal: Vec2
+)

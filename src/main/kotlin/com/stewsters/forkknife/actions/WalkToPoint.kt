@@ -42,7 +42,7 @@ class WalkToPoint(
         world.move(entity, path[1])
 
         val meleeTargets = next.entities.filter {
-            it.creature != null
+            it.isAlive()
                     && it.squad != null && entity.squad != null
                     && it.squad.id != entity.squad.id
         }
@@ -51,7 +51,7 @@ class WalkToPoint(
         }
 
         // get next step, go there
-        if (next.entities.filter { it.creature == null }.isNotEmpty()) {
+        if (next.entities.filter { !it.isAlive() }.isNotEmpty()) {
             // Free loot pickup
             return Loot().onPerform(world, entity)
             //return Alternative(Loot())

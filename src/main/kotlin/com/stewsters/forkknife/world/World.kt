@@ -7,6 +7,7 @@ import com.stewsters.forkknife.math.Bresenham2d
 import com.stewsters.forkknife.math.LosEvaluator
 import com.stewsters.forkknife.worldCenter
 import kaiju.math.*
+
 import org.hexworks.zircon.api.data.Position
 import kotlin.streams.toList
 
@@ -136,15 +137,24 @@ class World(
         return char
     }
 
+    fun visibleThings(entity: Entity, range: Int): List<Entity> {
+        return actors.stream()
+            .filter { getEuclideanDistance(entity.pos!!, it.pos!!) <= range }
+            .filter { Bresenham2d.los(entity.pos!!, it.pos!!, losEntity) }
+            .toList()
+    }
 
     fun closestVisibleEnemyInRange(entity: Entity, range: Int): Entity? {
         return actors.stream()
-            .filter { it.squad != entity.squad && it.creature != null }
-            .filter { it.creature?.hp?.current ?: 0 > 0 }
+            .filter { it.squad != entity.squad && it.creature?.hp?.current ?: 0 > 0 }
             .filter { getEuclideanDistance(entity.pos!!, it.pos!!) <= range }
             .filter { Bresenham2d.los(entity.pos!!, it.pos!!, losEntity) }
             .toList()
             .minBy { getEuclideanDistance(entity.pos!!, it.pos!!) }
+    }
+
+    fun distanceToRing(entity: Entity): Int {
+        return radius - getChebyshevDistance(entity.pos!!, ringCenter)
     }
 
 }

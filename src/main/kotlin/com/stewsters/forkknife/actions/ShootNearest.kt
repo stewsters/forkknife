@@ -6,16 +6,9 @@ import com.stewsters.forkknife.world.World
 class ShootNearest : Action {
 
     override fun onPerform(world: World, entity: Entity): ActionResult {
-        val gun = entity.creature?.primary
-        if (gun == null)
-            return Failed
+        val gun = entity.creature?.primary ?: return Failed
 
-        val target = world.closestVisibleEnemyInRange(entity, gun.getRange())
-
-        if (target == null) {
-            // no targets
-            return Failed
-        }
+        val target = world.closestVisibleEnemyInRange(entity, gun.getRange()) ?: return Failed
 
         if (target.creature == null) {
             println("Not alive to shoot")

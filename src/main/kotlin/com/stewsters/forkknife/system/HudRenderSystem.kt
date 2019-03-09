@@ -3,6 +3,7 @@ package com.stewsters.forkknife.system
 import com.stewsters.forkknife.leftColumn
 import com.stewsters.forkknife.rightColumn
 import com.stewsters.forkknife.screenSize
+import com.stewsters.forkknife.sightRange
 import com.stewsters.forkknife.world.World
 import kaiju.math.getChebyshevDistance
 import kaiju.math.getEuclideanDistance
@@ -83,7 +84,7 @@ object HudRenderSystem {
         val charPos = characters[world.selectedChar].pos!!
         world.actors
             .filter {
-                (it.pos != null) && !characters.contains(it) && getEuclideanDistance(it.pos!!, charPos) < 18
+                (it.pos != null) && !characters.contains(it) && getEuclideanDistance(it.pos!!, charPos) < sightRange
             }
             .sortedBy { getChebyshevDistance(charPos, it.pos!!) }
             .forEach { entity ->

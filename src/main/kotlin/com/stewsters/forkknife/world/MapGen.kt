@@ -75,7 +75,6 @@ object MapGen {
 
         repeat(20) { squadId ->
 
-            val squad = Squad(squadId)
 
             // random xy pos
             val teamStarts = Vec2(
@@ -85,6 +84,8 @@ object MapGen {
                 .inclusiveMooreNeighborhood()
                 .filter { world.map.contains(it) && !world.map[it].type.blocks }
                 .shuffled()
+
+            val squad = Squad(squadId, teamStarts.first())
 
             repeat(3) {
                 val appearance = if (squad.id == 0)
@@ -104,7 +105,7 @@ object MapGen {
                 val opponent = buildStartingCharacter(
                     teamStarts[it],
                     squad,
-                    if (squad.id == 0) PlayerAI() else OpponentAI,
+                    if (squad.id == 0) PlayerAI() else OpponentAI(),
                     appearance
                 )
                 world.add(opponent)

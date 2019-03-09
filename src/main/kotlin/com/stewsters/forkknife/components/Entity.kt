@@ -21,4 +21,7 @@ class Entity(
 
 ) {
     val lastShot: Int = -1
+
+    fun isAlive(): Boolean = creature?.hp?.current ?: 0 > 0
+    fun isLootable(): Boolean = inventory?.items?.size ?: 0 > 0
 }
