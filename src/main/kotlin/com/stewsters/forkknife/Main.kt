@@ -22,7 +22,7 @@ val rightColumn = Vec2[10, 40]
 val screenSize = Vec2[playAreaScreenSize.x + leftColumn.x + rightColumn.x, 40]
 
 
-val worldSize = Vec2(256, 256)
+val worldSize = Vec2(128, 128)
 val worldCenter = Vec2(worldSize.x / 2, worldSize.y / 2)
 
 var highlightPath = listOf<Vec2>()

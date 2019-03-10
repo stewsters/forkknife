@@ -15,6 +15,7 @@ class WalkToPoint(
         if (entity.pos == destination)
             return Succeeded
 
+//        val start = System.currentTimeMillis()
         // path to point
         val path = findPath2d(
             size = worldSize,
@@ -23,19 +24,20 @@ class WalkToPoint(
             neighbors = {
                 it.vonNeumanNeighborhood().filter { vec ->
                     !world.map[it].type.blocks &&
-                            world.map[it].entities.filter { it != entity && it.creature != null }.isEmpty()
+                            world.map[it].entities.filter { it != entity && it.isAlive() }.isEmpty()
                 }
             },
             start = entity.pos!!,
             end = destination
         )
+//        println(System.currentTimeMillis() - start)
 
         if (path == null || path.size < 2)
             return Failed
 
         val next = world.map[path[1]]
 
-        if (next.type.blocks) {
+        if (next.type.blocks || next.entities.any { it.isAlive() }) {
             return Failed
         }
 

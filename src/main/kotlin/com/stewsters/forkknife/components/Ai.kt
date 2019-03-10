@@ -4,9 +4,11 @@ import com.stewsters.forkknife.actions.*
 import com.stewsters.forkknife.sightRange
 import com.stewsters.forkknife.world.World
 import kaiju.math.Vec2
-import kaiju.math.d
 import kaiju.math.getChebyshevDistance
+import kaiju.math.getDoubleInRange
 import kaiju.math.getEuclideanDistance
+import java.lang.Math.cos
+import java.lang.Math.sin
 
 interface AI {
     // receives instructions
@@ -84,7 +86,7 @@ class OpponentAI : AI {
         // see treasure
         // loot it - mark that we are done with it?
 
-        world.visibleThings(entity, 18)
+        world.visibleThings(entity, 18).asSequence()
             .filter { !it.isAlive() && it.isLootable() }
             .filter { !alreadyLooted.contains(it) }
             .minBy { getChebyshevDistance(it.pos!!, entity.pos!!) }
@@ -104,8 +106,15 @@ class OpponentAI : AI {
         // we basically want to explore unopened areas, keeping away from the edges
 
         entity.squad?.goal?.let { goal ->
-            if (getEuclideanDistance(goal, entity.pos!!) < 10) {
-                entity.squad.goal = Vec2[d(world.map.xSize), d(world.map.ySize)]
+            if (getEuclideanDistance(goal, entity.pos!!) < 5) {
+
+                val angle = getDoubleInRange(0.0, Math.PI * 2)
+                val x = 20.0 * cos(angle)
+                val y = 20.0 * sin(angle)
+                val potential = entity.pos!! + Vec2[x.toInt(), y.toInt()]
+
+                if (world.map.contains(potential) && !world.map[potential].type.blocks)
+                    entity.squad.goal = potential
             }
             return WalkToPoint(goal)
         }

@@ -34,10 +34,12 @@ class World(
 
     fun isOutsideRing(pos: Vec2): Boolean = getEuclideanDistance(ringCenter, pos) > radius
 
+//    val entities = mutableListOf<Entity>()
     val actors = mutableListOf<Entity>() // with ai
 
     fun add(character: Entity) {
         val pos = character.pos
+//        entities.add(character)
         if (pos != null) {
             map[pos].entities.add(character)
         }
@@ -48,6 +50,7 @@ class World(
 
     fun remove(character: Entity) {
         val pos = character.pos
+//        entities.remove(character)
         if (pos != null) {
             map[pos].entities.remove(character)
         }
@@ -138,14 +141,14 @@ class World(
     }
 
     fun visibleThings(entity: Entity, range: Int): List<Entity> {
-        return actors.stream()
+        return actors.asSequence()
             .filter { getEuclideanDistance(entity.pos!!, it.pos!!) <= range }
             .filter { Bresenham2d.los(entity.pos!!, it.pos!!, losEntity) }
             .toList()
     }
 
     fun closestVisibleEnemyInRange(entity: Entity, range: Int): Entity? {
-        return actors.stream()
+        return actors.asSequence()
             .filter { it.squad != entity.squad && it.creature?.hp?.current ?: 0 > 0 }
             .filter { getEuclideanDistance(entity.pos!!, it.pos!!) <= range }
             .filter { Bresenham2d.los(entity.pos!!, it.pos!!, losEntity) }
@@ -156,6 +159,10 @@ class World(
     fun distanceToRing(entity: Entity): Int {
         return radius - getChebyshevDistance(entity.pos!!, ringCenter)
     }
+
+//    fun getRandomPackageLocation(): Vec2 {
+//        return entities.filter { it.isLootable() }.random().pos ?: ringCenter
+//    }
 
 }
 
