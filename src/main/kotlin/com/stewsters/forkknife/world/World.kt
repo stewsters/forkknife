@@ -9,6 +9,7 @@ import com.stewsters.forkknife.worldCenter
 import kaiju.math.*
 
 import org.hexworks.zircon.api.data.Position
+import kotlin.math.max
 import kotlin.streams.toList
 
 class World(
@@ -25,10 +26,10 @@ class World(
         return characters[selectedChar]
     }
 
-    val ringCenter = Vec2[
+    val ringCenter = Vec2(
             getIntInRange(map.xSize / 4, 3 * map.xSize / 4),
             getIntInRange(map.ySize / 4, 3 * map.ySize / 4)
-    ]
+    )
 
     var radius = max(worldCenter.x, worldCenter.y) * 2
 
@@ -78,7 +79,7 @@ class World(
         val x = position.x - center.x
         val y = position.y - center.y
 
-        return Vec2[x, y]
+        return Vec2(x, y)
     }
 
     fun screenToMap(position: Position): Vec2 = screenToMap(position.x, position.y)
@@ -90,7 +91,7 @@ class World(
         val xW = x + center.x - halfPlayAreaSize.x - leftColumn.x
         val yW = y + center.y - halfPlayAreaSize.y
 
-        return Vec2[xW, yW]
+        return Vec2(xW, yW)
     }
 
     var turn = 0
@@ -148,12 +149,13 @@ class World(
     }
 
     fun closestVisibleEnemyInRange(entity: Entity, range: Int): Entity? {
+        val pos = entity.pos!!
+
         return actors.asSequence()
             .filter { it.squad != entity.squad && it.creature?.hp?.current ?: 0 > 0 }
-            .filter { getEuclideanDistance(entity.pos!!, it.pos!!) <= range }
-            .filter { Bresenham2d.los(entity.pos!!, it.pos!!, losEntity) }
-            .toList()
-            .minBy { getEuclideanDistance(entity.pos!!, it.pos!!) }
+            .filter { getEuclideanDistance(pos, it.pos!!) <= range }
+            .filter { Bresenham2d.los(pos, it.pos!!, losEntity) }
+            .minByOrNull { getEuclideanDistance(pos, it.pos!!) }
     }
 
     fun distanceToRing(entity: Entity): Int {

@@ -1,6 +1,6 @@
 package com.stewsters.forkknife.math
 
-import kaiju.math.min
+import kotlin.math.min
 
 class RangedValue(
     var max: Int,
