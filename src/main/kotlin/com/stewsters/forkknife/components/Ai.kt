@@ -89,7 +89,7 @@ class OpponentAI : AI {
         world.visibleThings(entity, 18).asSequence()
             .filter { !it.isAlive() && it.isLootable() }
             .filter { !alreadyLooted.contains(it) }
-            .minBy { getChebyshevDistance(it.pos!!, entity.pos!!) }
+            .minByOrNull { getChebyshevDistance(it.pos!!, entity.pos!!) }
             ?.let {
 
                 val dist = getChebyshevDistance(it.pos!!, entity.pos!!)

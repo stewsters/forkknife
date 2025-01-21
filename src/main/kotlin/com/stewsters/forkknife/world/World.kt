@@ -155,8 +155,7 @@ class World(
             .filter { it.squad != entity.squad && it.creature?.hp?.current ?: 0 > 0 }
             .filter { getEuclideanDistance(pos, it.pos!!) <= range }
             .filter { Bresenham2d.los(pos, it.pos!!, losEntity) }
-            
-            .minBy { getEuclideanDistance(pos, it.pos!!) }
+            .minByOrNull { getEuclideanDistance(pos, it.pos!!) }
     }
 
     fun distanceToRing(entity: Entity): Int {
