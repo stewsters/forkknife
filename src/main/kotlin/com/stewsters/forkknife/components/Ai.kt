@@ -111,7 +111,7 @@ class OpponentAI : AI {
                 val angle = getDoubleInRange(0.0, Math.PI * 2)
                 val x = 20.0 * cos(angle)
                 val y = 20.0 * sin(angle)
-                val potential = entity.pos!! + Vec2[x.toInt(), y.toInt()]
+                val potential = entity.pos!! + Vec2(x.toInt(), y.toInt())
 
                 if (world.map.contains(potential) && !world.map[potential].type.blocks)
                     entity.squad.goal = potential

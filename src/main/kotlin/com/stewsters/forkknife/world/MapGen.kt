@@ -14,7 +14,7 @@ object MapGen {
 
 
         val world = World(
-            Matrix2d(worldSize) { x, y ->
+            matrix2dOf(worldSize) { x, y ->
                 val type =
                     if (x == 0 || y == 0 || x == worldSize.x - 1 || y == worldSize.y - 1)
                         TerrainType.WALL
@@ -30,15 +30,15 @@ object MapGen {
         // drop some buildings on that world
 
         repeat(80) {
-            val buildingDimentions = Vec2[
+            val buildingDimentions = Vec2(
                     getIntInRange(4, 8),
                     getIntInRange(4, 8)
-            ]
+            )
 
-            val upperLeft = Vec2[
+            val upperLeft = Vec2(
                     getIntInRange(1, world.map.xSize - 1 - buildingDimentions.x),
                     getIntInRange(1, world.map.ySize - 1 - buildingDimentions.y)
-            ]
+            )
 
             // can we place it there
 
@@ -61,10 +61,10 @@ object MapGen {
                     if (right && yCenter == y) TerrainType.DOOR else TerrainType.WALL
             }
 
-            val gearXY = Vec2[
+            val gearXY = Vec2(
                     upperLeft.x + getIntInRange(1, buildingDimentions.x - 2),
                     upperLeft.y + getIntInRange(1, buildingDimentions.y - 2)
-            ]
+            )
 
             world.add(buildRandomLoot(gearXY))
 
