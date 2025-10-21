@@ -1,12 +1,33 @@
 package com.stewsters.forkknife.world
 
-import com.stewsters.forkknife.components.*
+import com.stewsters.forkknife.components.AI
+import com.stewsters.forkknife.components.AmmoBox
+import com.stewsters.forkknife.components.Appearance
+import com.stewsters.forkknife.components.Barrel
+import com.stewsters.forkknife.components.BodyArmor
+import com.stewsters.forkknife.components.Creature
+import com.stewsters.forkknife.components.Entity
+import com.stewsters.forkknife.components.Gun
+import com.stewsters.forkknife.components.GunType
+import com.stewsters.forkknife.components.Helmet
+import com.stewsters.forkknife.components.Inventory
+import com.stewsters.forkknife.components.Magazine
+import com.stewsters.forkknife.components.OpponentAI
+import com.stewsters.forkknife.components.PlayerAI
+import com.stewsters.forkknife.components.Quality
+import com.stewsters.forkknife.components.Scope
+import com.stewsters.forkknife.components.Squad
+import com.stewsters.forkknife.components.Stock
 import com.stewsters.forkknife.getFemaleName
 import com.stewsters.forkknife.getMaleName
 import com.stewsters.forkknife.math.RangedValue
 import com.stewsters.forkknife.worldCenter
 import com.stewsters.forkknife.worldSize
-import kaiju.math.*
+import kaiju.math.Vec2
+import kaiju.math.d
+import kaiju.math.getBoolean
+import kaiju.math.getIntInRange
+import kaiju.math.matrix2dOf
 import org.hexworks.zircon.api.color.ANSITileColor
 
 object MapGen {
@@ -31,13 +52,13 @@ object MapGen {
 
         repeat(80) {
             val buildingDimentions = Vec2(
-                    getIntInRange(4, 8),
-                    getIntInRange(4, 8)
+                getIntInRange(4, 8),
+                getIntInRange(4, 8)
             )
 
             val upperLeft = Vec2(
-                    getIntInRange(1, world.map.xSize - 1 - buildingDimentions.x),
-                    getIntInRange(1, world.map.ySize - 1 - buildingDimentions.y)
+                getIntInRange(1, world.map.xSize - 1 - buildingDimentions.x),
+                getIntInRange(1, world.map.ySize - 1 - buildingDimentions.y)
             )
 
             // can we place it there
@@ -62,8 +83,8 @@ object MapGen {
             }
 
             val gearXY = Vec2(
-                    upperLeft.x + getIntInRange(1, buildingDimentions.x - 2),
-                    upperLeft.y + getIntInRange(1, buildingDimentions.y - 2)
+                upperLeft.x + getIntInRange(1, buildingDimentions.x - 2),
+                upperLeft.y + getIntInRange(1, buildingDimentions.y - 2)
             )
 
             world.add(buildRandomLoot(gearXY))
@@ -76,7 +97,7 @@ object MapGen {
         repeat(20) { squadId ->
 
 
-            // random xy pos
+            // random xy pos, take all adjacent cells, at least one should be free
             val teamStarts = Vec2(
                 getIntInRange(2, world.map.xSize - 3),
                 getIntInRange(2, world.map.ySize - 3)
@@ -87,7 +108,7 @@ object MapGen {
 
             val squad = Squad(squadId, teamStarts.first())
 
-            repeat(3) {
+            repeat(3) { gruntNumber ->
                 val appearance = if (squad.id == 0)
                     Appearance(
                         world.getPcGlyph(),
@@ -103,7 +124,7 @@ object MapGen {
                 }
 
                 val opponent = buildStartingCharacter(
-                    teamStarts[it],
+                    teamStarts[gruntNumber],
                     squad,
                     if (squad.id == 0) PlayerAI() else OpponentAI(),
                     appearance

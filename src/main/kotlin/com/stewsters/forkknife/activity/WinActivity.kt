@@ -19,8 +19,6 @@ class WinActivity(val game: BrGame) : Activity {
             .withText("You Win")
             .build()
 
-        // todo: print some stuff
-
 
         val exit = Components.button()
             .withText("Back To Main")

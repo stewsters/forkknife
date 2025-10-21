@@ -6,11 +6,13 @@ import com.stewsters.forkknife.leftColumn
 import com.stewsters.forkknife.math.Bresenham2d
 import com.stewsters.forkknife.math.LosEvaluator
 import com.stewsters.forkknife.worldCenter
-import kaiju.math.*
-
+import kaiju.math.Matrix2d
+import kaiju.math.Vec2
+import kaiju.math.getChebyshevDistance
+import kaiju.math.getEuclideanDistance
+import kaiju.math.getIntInRange
 import org.hexworks.zircon.api.data.Position
 import kotlin.math.max
-import kotlin.streams.toList
 
 class World(
 //    val size: Vec3,
@@ -27,15 +29,15 @@ class World(
     }
 
     val ringCenter = Vec2(
-            getIntInRange(map.xSize / 4, 3 * map.xSize / 4),
-            getIntInRange(map.ySize / 4, 3 * map.ySize / 4)
+        getIntInRange(map.xSize / 4, 3 * map.xSize / 4),
+        getIntInRange(map.ySize / 4, 3 * map.ySize / 4)
     )
 
     var radius = max(worldCenter.x, worldCenter.y) * 2
 
     fun isOutsideRing(pos: Vec2): Boolean = getEuclideanDistance(ringCenter, pos) > radius
 
-//    val entities = mutableListOf<Entity>()
+    //    val entities = mutableListOf<Entity>()
     val actors = mutableListOf<Entity>() // with ai
 
     fun add(character: Entity) {
@@ -70,7 +72,6 @@ class World(
 
     }
 
-    // TODO: this
     // gets position relative to player
     fun screenToPlayer(position: Position): Vec2 {
         // gets the world coordinates from a click
@@ -100,7 +101,7 @@ class World(
         println(turn++)
 
         if ((turn / 20) % 3 == 0)
-            radius -= 1 // todo, close, then hold
+            radius -= 1
         // If players are dead, stop
 
 

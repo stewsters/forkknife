@@ -21,6 +21,7 @@ class ShootNearest : Action {
             return Failed
         }
 
+        // Shoot the target
         target.creature.takeDamage(target, gun.getDamage())
 
         return Succeeded

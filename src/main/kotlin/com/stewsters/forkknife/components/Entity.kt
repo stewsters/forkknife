@@ -24,4 +24,7 @@ class Entity(
 
     fun isAlive(): Boolean = (creature?.hp?.current ?: 0) > 0
     fun isLootable(): Boolean = (inventory?.items?.size ?: 0) > 0
+    fun canShoot(): Boolean {
+        return true
+    }
 }

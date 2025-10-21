@@ -1,6 +1,15 @@
 package com.stewsters.forkknife.actions
 
-import com.stewsters.forkknife.components.*
+import com.stewsters.forkknife.components.AmmoBox
+import com.stewsters.forkknife.components.Backpack
+import com.stewsters.forkknife.components.Barrel
+import com.stewsters.forkknife.components.BodyArmor
+import com.stewsters.forkknife.components.Entity
+import com.stewsters.forkknife.components.Gun
+import com.stewsters.forkknife.components.Helmet
+import com.stewsters.forkknife.components.Magazine
+import com.stewsters.forkknife.components.Scope
+import com.stewsters.forkknife.components.Stock
 import com.stewsters.forkknife.math.RangedValue
 import com.stewsters.forkknife.world.World
 
@@ -29,11 +38,13 @@ class Loot : Action {
                                 creature.armor = RangedValue(item.quality.value)
                                 true
                             } else false
+
                         is Helmet ->
                             if (item.quality.value > (creature.headArmor?.quality?.value ?: 0)) {
                                 creature.headArmor = item
                                 true
                             } else false
+
                         is Gun ->
                             if (creature.primary == null) {
                                 creature.primary = item
@@ -80,6 +91,7 @@ class Loot : Action {
                         is AmmoBox -> {
                             false
                         }
+
                         is Backpack -> {
                             false
                         }

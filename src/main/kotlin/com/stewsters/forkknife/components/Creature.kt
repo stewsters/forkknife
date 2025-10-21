@@ -22,21 +22,19 @@ class Creature(
 
     fun takeDamage(us: Entity, damage: Int) {
         var remainingDamage = damage
-        //TODO: need to deal damage
-        // if we have armor, remove from that
 
-
+        // Remove damage from armor first
         if (remainingDamage > 0 && armor.current > 0) {
             val armorDamage = min(armor.current, remainingDamage)
             armor.damage(armorDamage)
             remainingDamage -= armorDamage
         }
+        // Then from health
         if (remainingDamage > 0 && hp.current > 0) {
             val healthDamage = min(hp.current, remainingDamage)
             hp.damage(healthDamage)
-            // todo: overdamage?
 
-            // todo: death
+            // If the target died we turn him to a container of loot
             if (hp.current <= 0) {
                 println("Death of ${us.name}")
 
@@ -48,19 +46,17 @@ class Creature(
 
                 val inventory = us.inventory!!
 
-                listOf(bodyArmor, headArmor, primary, secondary, backpack).forEach {
-                    it.apply {
-                        inventory.items.add(
-                            Entity(
-                                name = this.toString(),
-                                item = this
-                            )
-                        )
-                    }
-                }
+                //  move gear into inventory so it can be looted
+                inventory.items.addAll(listOfNotNull(bodyArmor, headArmor, primary, secondary, backpack).map { item ->
+                    Entity(
+                        name = item.toString(),
+                        item = item
+                    )
+                })
+
 
             }
-            // TODO: move gear into inventory
+
         }
     }
 }

@@ -27,7 +27,6 @@ object MapRenderSystem {
                 var back: TileColor
                 var char: Char
 
-                //Todo: if they shot highlight, if they are allies show number
                 if (!world.map.contains(worldPos)) {
                     fore = ANSITileColor.BLACK
                     back = ANSITileColor.BLACK

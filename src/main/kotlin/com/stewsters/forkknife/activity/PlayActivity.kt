@@ -40,6 +40,7 @@ class PlayActivity(val game: BrGame, val world: World) : Activity {
 
                 return true
             }
+
             MouseActionType.MOUSE_MOVED -> {
                 if (target == mouseAction.position) {
                     return false
@@ -68,6 +69,7 @@ class PlayActivity(val game: BrGame, val world: World) : Activity {
                 return true
 
             }
+
             else -> false
 
         }

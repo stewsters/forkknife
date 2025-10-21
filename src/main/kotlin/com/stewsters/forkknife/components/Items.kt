@@ -40,33 +40,87 @@ class Gun(
     fun getDamage(): Int {
         return gunType.baseDamage + (barrel?.quality?.value ?: 0)
     }
+
+    fun getAmmoCapacity(): Int {
+        return gunType.baseAmmoCapacity + (magazine?.quality?.value ?: 0)
+    }
+
+    fun getStability(): Int {
+        return gunType.baseStability + (stock?.quality?.value ?: 0)
+    }
+
     //TODO: magazine, stock
 }
 
 enum class GunType(
     val ammoType: AmmoType,
     val baseDamage: Int,
-    val baseRange: Int
+    val baseRange: Int,
+    val baseAmmoCapacity: Int,
+    val baseStability: Int,
 ) {
     // pistol
-    PISTOL(AmmoType.LIGHT, 1, 5),
+    PISTOL(
+        ammoType = AmmoType.LIGHT,
+        baseDamage = 1,
+        baseRange = 5,
+        baseAmmoCapacity = 2,
+        baseStability = 1
+    ),
 
     // smg
-    PDW(AmmoType.LIGHT, 2, 5),
+    PDW(
+        ammoType = AmmoType.LIGHT,
+        baseDamage = 2,
+        baseRange = 5,
+        baseAmmoCapacity = 4,
+        baseStability = 1
+    ),
 
     // shotgun
-    SHOTGUN(AmmoType.SHOTGUN, 3, 4),
+    SHOTGUN(
+        ammoType = AmmoType.SHOTGUN,
+        baseDamage = 3,
+        baseRange = 3,
+        baseAmmoCapacity = 1,
+        baseStability = 1
+    ),
 
     // assault rifle
-    AR(AmmoType.HEAVY, 2, 10),
+    AR(
+        ammoType = AmmoType.HEAVY,
+        baseDamage = 2,
+        baseRange = 10,
+        baseAmmoCapacity = 5,
+        baseStability = 1
+    ),
 
     // LMG -
-    LMG(AmmoType.HEAVY, 3, 8),
+    LMG(
+        ammoType = AmmoType.HEAVY,
+        baseDamage = 2,
+        baseRange = 8,
+        baseAmmoCapacity = 10,
+        baseStability = 4
+    ),
 
-    DMR(AmmoType.HEAVY, 1, 14),
+    DMR(
+        ammoType = AmmoType.HEAVY,
+        baseDamage = 2,
+        baseRange = 14,
+        baseAmmoCapacity = 2,
+        baseStability = 1
+    ),
 
     // sniper - long range, needs reload after each fire
-    SNIPER(AmmoType.SNIPER, 2, 18)
+    SNIPER(
+        ammoType = AmmoType.SNIPER,
+        baseDamage = 2,
+        baseRange = 18,
+        baseAmmoCapacity = 1,
+        baseStability = 0
+
+    )
 }
 
 // ammo capacity
