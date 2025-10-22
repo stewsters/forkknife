@@ -41,13 +41,12 @@ class Creature(
                 us.appearance?.ch = '%'
                 us.appearance?.priority = 0
 
-                if (us.inventory == null)
+                if (us.inventory == null) {
                     us.inventory = Inventory(mutableListOf())
-
-                val inventory = us.inventory!!
+                }
 
                 //  move gear into inventory so it can be looted
-                inventory.items.addAll(listOfNotNull(bodyArmor, headArmor, primary, secondary, backpack).map { item ->
+                us.inventory?.items?.addAll(listOfNotNull(bodyArmor, headArmor, primary, secondary, backpack).map { item ->
                     Entity(
                         name = item.toString(),
                         item = item

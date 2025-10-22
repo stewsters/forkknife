@@ -45,7 +45,7 @@ object MapRenderSystem {
                 } else {
 
                     val cell = world.map[worldPos]
-                    val entity = cell.entities.sortedByDescending { it.appearance?.priority ?: -1 }.firstOrNull()
+                    val entity = cell.entities.maxByOrNull { it.appearance?.priority ?: -1 }
 
                     if (entity?.appearance != null) {
                         fore = entity.appearance.color

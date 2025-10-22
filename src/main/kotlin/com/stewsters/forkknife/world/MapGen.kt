@@ -11,13 +11,11 @@ import com.stewsters.forkknife.components.Gun
 import com.stewsters.forkknife.components.GunType
 import com.stewsters.forkknife.components.Helmet
 import com.stewsters.forkknife.components.Inventory
-import com.stewsters.forkknife.components.Magazine
 import com.stewsters.forkknife.components.OpponentAI
 import com.stewsters.forkknife.components.PlayerAI
 import com.stewsters.forkknife.components.Quality
 import com.stewsters.forkknife.components.Scope
 import com.stewsters.forkknife.components.Squad
-import com.stewsters.forkknife.components.Stock
 import com.stewsters.forkknife.getFemaleName
 import com.stewsters.forkknife.getMaleName
 import com.stewsters.forkknife.math.RangedValue
@@ -51,14 +49,14 @@ object MapGen {
         // drop some buildings on that world
 
         repeat(80) {
-            val buildingDimentions = Vec2(
+            val buildingDimensions = Vec2(
                 getIntInRange(4, 8),
                 getIntInRange(4, 8)
             )
 
             val upperLeft = Vec2(
-                getIntInRange(1, world.map.xSize - 1 - buildingDimentions.x),
-                getIntInRange(1, world.map.ySize - 1 - buildingDimentions.y)
+                getIntInRange(1, world.map.xSize - 1 - buildingDimensions.x),
+                getIntInRange(1, world.map.ySize - 1 - buildingDimensions.y)
             )
 
             // can we place it there
@@ -68,23 +66,23 @@ object MapGen {
             val left = getBoolean()
             val right = (!(top || bottom || left)) || getBoolean()
 
-            val xCenter = upperLeft.x + buildingDimentions.x / 2
-            for (x in (upperLeft.x..(upperLeft.x + buildingDimentions.x))) {
+            val xCenter = upperLeft.x + buildingDimensions.x / 2
+            for (x in (upperLeft.x..(upperLeft.x + buildingDimensions.x))) {
                 world.map[x, upperLeft.y].type = if (top && xCenter == x) TerrainType.DOOR else TerrainType.WALL
-                world.map[x, upperLeft.y + buildingDimentions.y].type =
+                world.map[x, upperLeft.y + buildingDimensions.y].type =
                     if (bottom && xCenter == x) TerrainType.DOOR else TerrainType.WALL
             }
 
-            val yCenter = upperLeft.y + buildingDimentions.y / 2
-            for (y in (upperLeft.y..(upperLeft.y + buildingDimentions.y))) {
+            val yCenter = upperLeft.y + buildingDimensions.y / 2
+            for (y in (upperLeft.y..(upperLeft.y + buildingDimensions.y))) {
                 world.map[upperLeft.x, y].type = if (left && yCenter == y) TerrainType.DOOR else TerrainType.WALL
-                world.map[upperLeft.x + buildingDimentions.x, y].type =
+                world.map[upperLeft.x + buildingDimensions.x, y].type =
                     if (right && yCenter == y) TerrainType.DOOR else TerrainType.WALL
             }
 
             val gearXY = Vec2(
-                upperLeft.x + getIntInRange(1, buildingDimentions.x - 2),
-                upperLeft.y + getIntInRange(1, buildingDimentions.y - 2)
+                upperLeft.x + getIntInRange(1, buildingDimensions.x - 2),
+                upperLeft.y + getIntInRange(1, buildingDimensions.y - 2)
             )
 
             world.add(buildRandomLoot(gearXY))
@@ -107,6 +105,7 @@ object MapGen {
                 .shuffled()
 
             val squad = Squad(squadId, teamStarts.first())
+            val squadColor = ANSITileColor.entries[(squadId % ANSITileColor.entries.size)]
 
             repeat(3) { gruntNumber ->
                 val appearance = if (squad.id == 0)
@@ -118,7 +117,7 @@ object MapGen {
                 else {
                     Appearance(
                         world.getNpcGlyph(),
-                        ANSITileColor.RED,
+                        squadColor,
                         priority = 2
                     )
                 }
@@ -161,18 +160,18 @@ object MapGen {
 
 
     val randomTypes =
-        Quality.values().map { BodyArmor(it) } +
-                Quality.values().map { Helmet(it) } +
-                Quality.values().map { Scope(it) } +
-                Quality.values().map { Stock(it) } +
-                Quality.values().map { Magazine(it) } +
-                Quality.values().map { Barrel(it) }
+        Quality.entries.map { BodyArmor(it) } +
+                Quality.entries.map { Helmet(it) } +
+                Quality.entries.map { Scope(it) } +
+//                Quality.values().map { Stock(it) } + // TODO: stocks dont help yet
+//                Quality.values().map { Magazine(it) } + // TODO: magazines dont help yet, add reloading?
+                Quality.entries.map { Barrel(it) }
 
     private fun buildRandomLoot(pos: Vec2): Entity {
         val gear = mutableListOf<Entity>()
 
         if (getBoolean()) {
-            val gunType = GunType.values().random()
+            val gunType = GunType.entries.random()
             gear.add(
                 Entity(
                     name = gunType.name,
